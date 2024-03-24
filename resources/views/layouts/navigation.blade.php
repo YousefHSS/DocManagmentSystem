@@ -34,43 +34,45 @@
 
             </div>
 
-{{--            dropdown--}}
+{{--            a java script dropdown--}}
+
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <div class="relative" @click.away="open = false" @close.stop="open = false">
-                    <div @click="open = !open">
-                        <x-dropdown align="right" width="48" content-classes="py-1 bg-white dark:bg-gray-700">
-                            <x-slot name="trigger">
-                                <button class="flex items-center text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400 focus:bg-gray-100 dark:focus:bg-gray-900 transition duration-150 ease-in-out">
-                                    <div>{{ Auth::user()->name }}</div>
+                <!-- Settings Dropdown -->
+                <x-dropdown align="right" width="48" content-classes="hidden">
+                    <x-slot name="trigger">
+                        <button class="flex items-center text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:text-gray-500 dark:focus:text-gray-300 focus:bg-gray-100 dark:focus:bg-gray-700 transition duration-150 ease-in-out">
+                            <div>{{ Auth::user()->name }}</div>
 
-                                    <div class="ml-1">
-                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 3a7 7 0 100 14 7 7 0 000-14zm0 1a6 6 0 100 12 6 6 0 000-12zm0 2a1 1 0 011 1v6a1 1 0 01-2 0V7a1 1 0 011-1zm0 8a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </x-slot>
+                            <div class="ml-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M10 0a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm0-3a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
 
-                            <x-slot name="content">
-                                <x-dropdown-link :href="route('profile.edit')">
-                                    {{ __('Profile') }}
-                                </x-dropdown-link>
+                    <x-slot name="content" >
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
 
-                                <!-- Authentication -->
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('logout')"
-                                            onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
-                                        {{ __('Log Out') }}
-                                    </x-dropdown-link>
-                                </form>
-                            </x-slot>
-                        </x-dropdown>
-                    </div>
-                </div>
+{{--                            simple logout button--}}
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+
+                        </form>
+                    </x-slot>
+                </x-dropdown>
             </div>
+
 
 
 

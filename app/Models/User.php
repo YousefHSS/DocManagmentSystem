@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Couchbase\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -44,10 +44,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function user_roles()
-    {
-        return $this->hasMany(user_roles::class);
-    }
+
 
     public function roles()
     {
@@ -62,16 +59,13 @@ class User extends Authenticatable
         return false;
     }
 
-//    get all roles of user
-    public function getRoles()
-    {
-        return $this->roles()->get();
-    }
 
 //    get first role of user
     public function getRole()
     {
-        return $this->roles()->firstOrFail();
+
+        return $this->roles()->first();
+
     }
 
 //    role of user

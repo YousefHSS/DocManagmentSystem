@@ -51,18 +51,22 @@ Route::post('admin/change-role', [ProfileController::class, 'changeRole'])->name
 
 
 //Document routes
+//group routes
+Route::group(['prefix' => 'document/'], function () {
 //download
-Route::post('download/{document}', [DocumentController::class, 'download'])->name('download');
+    Route::post('download/{document}', [DocumentController::class, 'download'])->name('download');
 //update
-Route::patch('update/{document}', [DocumentController::class, 'updateDocument'])->name('update');
+    Route::patch('update/{document}', [DocumentController::class, 'updateDocument'])->name('update');
 //delete
-Route::post('delete', [DocumentController::class, 'delete'])->name('delete');
+    Route::post('delete', [DocumentController::class, 'delete'])->name('delete');
 //create
-Route::post('create', [DocumentController::class, 'create'])->name('create')->middleware('role:uploader');
+    Route::post('create', [DocumentController::class, 'create'])->name('create')->middleware('role:uploader');
 //approve for reviewer or finalizer only
-Route::post('approve', [DocumentController::class, 'approve'])->name('approve')->middleware('role:finalizer,reviewer');
+    Route::post('approve', [DocumentController::class, 'approve'])->name('approve')->middleware('role:finalizer,reviewer');
 //reject
-Route::post('reject', [DocumentController::class, 'reject'])->name('reject')->middleware('role:finalizer,reviewer');
+    Route::post('reject', [DocumentController::class, 'reject'])->name('reject')->middleware('role:finalizer,reviewer');
+})->middleware('auth,verified');
+
 
 
 

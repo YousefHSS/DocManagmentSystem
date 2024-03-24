@@ -87,7 +87,7 @@ class DocumentController extends Controller
         $doc= Document::find($document);
 
 //        check permission
-        if((auth()->user()->getRole()->role_slug == 'reviewer' && $doc->status == 'Under_Revision') || (auth()->user()->getRole()->role_slug == 'finalizer' && $doc->status == 'under_finalization')){
+        if((auth()->user()->getRole()->role_slug == 'reviewer' && $doc->status == Document::UNDER_REVISION) || (auth()->user()->getRole()->role_slug == 'finalizer' && $doc->status == Document::UNDER_FINALIZATION)){
             $doc->approve();
             $doc->save();
 

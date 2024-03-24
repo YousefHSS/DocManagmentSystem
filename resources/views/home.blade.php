@@ -23,7 +23,27 @@
 ?>
 @extends('layouts.Toast')
 @extends('components.reason-popup')
-
+{{--get status color--}}
+<?php
+function GetStatusColor($status) {
+    switch ($status) {
+        case \App\Models\Document::UNDER_FINALIZATION:
+            echo 'background-color: #ffffcb';
+            break;
+        case \App\Models\Document::APPROVED:
+            echo 'background-color: #90ee90';
+            break;
+        case \App\Models\Document::UNDER_REVISION:
+            echo 'background-color: #add8e6';
+            break;
+        case \App\Models\Document::REJECTED:
+            echo 'background-color: #ffcccb';
+            break;
+        default:
+            echo 'background-color: #ffffff';
+    }
+}
+?>
 @section('content')
 
 {{--    upload form --}}
@@ -94,7 +114,7 @@
                                     </td>
 {{--                                 td   background color depending on status--}}
                                     <td>
-                                    <div id="status" class="justify-center rounded flex p-1 border-2 border-primary"  style="">
+                                    <div id="status" class="justify-center rounded flex p-1 border-2 border-primary"  style=" <?php GetStatusColor($document->status) ?>">
                                         {{$document->status}}
                                     </div>
 {{--                                   notifaction icon if there is a reason when hovered dislpay the reason in a text bubble--}}
@@ -172,6 +192,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         let notificationIcons = document.querySelectorAll('.relative');
         notificationIcons.forEach(function (icon) {
+            if (icon.querySelector('.yasser') === null) {
+                return;
+            }
             icon.addEventListener('mouseover', function (e) {
                 icon.querySelector('.hidden').classList.remove('hidden');
             });

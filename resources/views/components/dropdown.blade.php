@@ -20,14 +20,33 @@ switch ($width) {
         break;
 }
 @endphp
-{{--not working?--}}
-<div x-data="{ open: false }" class="relative" @click.away="open = false" @close.stop="open = false">
+{{--a java script dropdown--}}
+<div id="profileDropdown" x-data="{ open: false }" class="relative" @click.away="open = false">
     <div @click="open = !open">
         {{ $trigger }}
     </div>
 
-    <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute z-20 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }} {{ $contentClasses }}">
+    <div id="content"  x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute z-10 {{ $alignmentClasses }} {{ $width }} rounded-md shadow-lg {{ $contentClasses }}">
         {{ $content }}
     </div>
 </div>
+<script>
+{{--    listner for profileDropdown--}}
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('profileDropdown').addEventListener('click', function (e) {
+        //     get the id content inside the dropdown
+            var content = document.getElementById('content');
+        //     animate the dropdown
+            content.classList.toggle('hidden');
+        });
+    //     if click outside the dropdown close it
+        document.addEventListener('click', function (e) {
+            if (!document.getElementById('profileDropdown').contains(e.target)) {
+                document.getElementById('content').classList.add('hidden');
+            }
+        });
+    });
+</script>
+
+
 

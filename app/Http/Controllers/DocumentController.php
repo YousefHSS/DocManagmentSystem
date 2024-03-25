@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\DocumentAction;
 use App\Models\Document;
+use App\Models\User;
+use App\Models\user_roles;
 use Illuminate\Support\Facades\Mail;
 
 class DocumentController extends Controller
@@ -90,6 +92,8 @@ class DocumentController extends Controller
         if((auth()->user()->getRole()->role_slug == 'reviewer' && $doc->status == Document::UNDER_REVISION) || (auth()->user()->getRole()->role_slug == 'finalizer' && $doc->status == Document::UNDER_FINALIZATION)){
             $doc->approve();
             $doc->save();
+            //        mail to the responsible party depending on the document status
+            $this->BuildSendMail($doc, 'approved');
 
         }else{
             $message = 'You do not have permission to approve documents';
@@ -111,12 +115,18 @@ class DocumentController extends Controller
 
             return redirect()->route('home')->with('error', $message);
         }
-        Mail::to("yousefhussen139@gmail.com")->send(new DocumentAction('rejected', route('download', $doc->id), request('reason')));
+
+
+
+//        Mail::to("yousefhussen139@gmail.com")->send(new DocumentAction('rejected', route('download', $doc->id), request('reason')));
 
 //        check permission
         if((auth()->user()->getRole()->role_slug == 'reviewer' && $doc->status == 'Under_Revision') || (auth()->user()->getRole()->role_slug == 'finalizer' && $doc->status == 'Under_Finalization')){
             $doc->reject(request('reason'));
             $doc->save();
+
+            //        mail to the responsible party depending on the document status
+            $this->BuildSendMail($doc, 'rejected');
 
         }else{
             $message = 'You do not have permission to reject documents';
@@ -125,4 +135,36 @@ class DocumentController extends Controller
         return redirect()->route('home');
     }
 
+    public function BuildSendMail($doc , $action){
+
+        switch ($doc->status){
+            case Document::UNDER_REVISION:
+                Mail::to(User::query()->whereHas('roles', function ($query) {
+                    $query->where('role_slug', 'reviewer');
+                })->first()->email)->send(new DocumentAction($action, route('search', ['query' => $doc->filename])));
+                break;
+            case Document::UNDER_FINALIZATION:
+                Mail::to(User::query()->whereHas('roles', function ($query) {
+                    $query->where('role_slug', 'finalizer');
+                })->first()->email)->send(new DocumentAction($action, route('search', ['query' => $doc->filename])));
+                break;
+
+            case Document::APPROVED || Document::REJECTED:
+                Mail::to(User::query()->whereHas('roles', function ($query) {
+                    $query->where('role_slug', 'uploader');
+                })->first()->email)->send(new DocumentAction($action, route('search', ['query' => $doc->filename])));
+        }
+    }
+    public function search()
+    {
+        $search = request('query');
+//        sanitize search
+        $search = filter_var($search, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $documents = Document::where('filename', 'like', '%' . $search . '%')->get();
+        return view('home',
+            [
+                'documents' => $documents,
+            ]
+        );
+    }
 }

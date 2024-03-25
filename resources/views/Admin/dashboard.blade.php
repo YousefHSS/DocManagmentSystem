@@ -29,8 +29,9 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="user_id" value="{{ $user->id }}">
                         <select name="role" id="role" class="form-control m-1">
-                            <option value="admin">Admin</option>
-                            <option value="user">User</option>
+            @foreach( $roles as $role)
+                <option value="{{ $role->role_slug }}">{{ $role->role_name }}</option>
+            @endforeach
                         </select>
                         <button type="submit" class="btn btn-primary m-1">Change</button>
                     </form>

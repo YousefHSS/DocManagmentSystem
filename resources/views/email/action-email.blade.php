@@ -32,7 +32,7 @@
         .button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #006600;
+            background-color: #000000;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
@@ -52,9 +52,7 @@
 @endphp
 <div class="container">
     <h1>A Document has been {{ $a }}</h1>
-    @if(isset($reason))
-        <p>Document has been rejected because {{ $reason }}</p>
-    @endif
+        <p>Document has been {{$a == 'approved' ? $a : $a.' because '.$reason}} </p>
     <p>To check the document please click on the below link.</p>
     <a href="{{ $link?? '#' }}" class="button fw-bolder"
        style="-webkit-text-stroke: 0.3px black;">Click Here</a>

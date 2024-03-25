@@ -1,28 +1,7 @@
 @extends('layouts.app')
-<?php
-
-//function getStatusColor($status) {
-//
-//    switch ($status) {
-//        case 'Under_Finalization':
-//            echo 'background-color: #ffffcb';
-//            break;
-//        case 'Approved':
-//            echo 'background-color: #90ee90';
-//            break;
-//        case 'Under_Revision':
-//            echo 'background-color: #add8e6';
-//            break;
-//        case 'Rejected':
-//            echo 'background-color: #ffcccb';
-//            break;
-//        default:
-//            echo 'background-color: #ffffff';
-//    }
-//}
-?>
 @extends('layouts.Toast')
 @extends('components.reason-popup')
+@extends('components.search-bar')
 {{--get status color--}}
 <?php
 function GetStatusColor($status) {
@@ -44,6 +23,8 @@ function GetStatusColor($status) {
     }
 }
 ?>
+
+
 @section('content')
 
 {{--    upload form --}}

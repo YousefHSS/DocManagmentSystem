@@ -28,10 +28,14 @@ Route::get('/home', function () {
     );
 })->middleware(['auth', 'verified'])->name('home');
 
+//search
+Route::get('/search', [DocumentController::class, 'search'])->name('search');
+
 Route::get('admin/dashboard', function () {
     return view('admin.dashboard',
         [
             'users' => \App\Models\User::all(),
+            'roles' => \App\Models\roles::all(),
         ]
 
     );

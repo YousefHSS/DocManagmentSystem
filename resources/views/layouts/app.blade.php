@@ -34,6 +34,7 @@
 
             <!-- Page Content -->
             <main style="display: flex; flex-wrap: wrap;">
+                @yield('components.search-bar')
                 {{ $slot??'' }}
                 @yield('content')
             </main>

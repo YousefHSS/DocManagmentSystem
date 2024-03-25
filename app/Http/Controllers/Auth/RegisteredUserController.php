@@ -45,6 +45,11 @@ class RegisteredUserController extends Controller
         ]);
 //        add role to user
         $role = roles::where('role_name', 'User')->first();
+        $role?? $role = roles::create([
+            'role_name' => 'User',
+            'role_description' => 'User role',
+            'role_slug' => 'user',
+        ]);
         $user_role= user_roles::create([
             'user_id' => $user->id,
             'role_id' => $role->id,

@@ -29,7 +29,10 @@ class RoleMiddleware
                 return $next($request);
         }
 
-        return redirect('login');
+
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 401);
     }
 }
 

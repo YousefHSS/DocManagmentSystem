@@ -20,13 +20,7 @@ Route::get('/', function () {
 });
 
 //home page
-Route::get('/home', function () {
-    return view('home',
-        [
-            'documents' => \App\Models\Document::all(),
-        ]
-    );
-})->middleware(['auth', 'verified'])->name('home');
+Route::get('/home', [DocumentController::class, 'index'])->middleware(['auth', 'verified'])->name('home');
 
 //search
 Route::get('/search', [DocumentController::class, 'search'])->name('search');
@@ -60,7 +54,7 @@ Route::group(['prefix' => 'document/'], function () {
 //download
     Route::post('download/{document}', [DocumentController::class, 'download'])->name('download');
 //update
-    Route::patch('update/{document}', [DocumentController::class, 'updateDocument'])->name('update');
+    Route::patch('update/{document}', [DocumentController::class, 'update'])->name('update');
 //delete
     Route::post('delete', [DocumentController::class, 'delete'])->name('delete');
 //create

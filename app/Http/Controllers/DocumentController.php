@@ -35,11 +35,19 @@ class DocumentController extends Controller
     }
     public function update( $document)
     {
-        return view('update',
-            [
-                'document' => Document::find($document),
-            ]
-        );
+        $doc= Document::find($document);
+        $file= request()->file('file');
+        $file->storeAs('UploadedDocs', $file->getClientOriginalName());
+        $doc->filename = $file->getClientOriginalName();
+        $doc->content = base64_encode(file_get_contents(storage_path('app/UploadedDocs/' . $file->getClientOriginalName())));
+        $doc->save();
+        //        delete all files from storage
+        $files = glob(storage_path('app/UploadedDocs/*'));
+        foreach($files as $file){
+            if(is_file($file))
+                unlink($file);
+        }
+        return redirect()->route('home');
     }
     public function delete()
     {
@@ -93,7 +101,7 @@ class DocumentController extends Controller
             $doc->approve();
             $doc->save();
             //        mail to the responsible party depending on the document status
-            $this->BuildSendMail($doc, 'approved');
+             EmailController::BuildSendMail($doc, 'approved');
 
         }else{
             $message = 'You do not have permission to approve documents';
@@ -109,8 +117,8 @@ class DocumentController extends Controller
 
         $doc= Document::where('filename', $filename)->first();
 
-//check reason size
-        if(strlen(request('reason')) > 65534){
+//check reason size is less than 65534 and greater than 0
+        if(strlen(request('reason')) > 65534 || strlen(request('reason')) < 1 ){
             $message = 'Reason can\'t be more than 65534 characters';
 
             return redirect()->route('home')->with('error', $message);
@@ -126,7 +134,7 @@ class DocumentController extends Controller
             $doc->save();
 
             //        mail to the responsible party depending on the document status
-            $this->BuildSendMail($doc, 'rejected');
+            EmailController::BuildSendMail($doc, 'rejected');
 
         }else{
             $message = 'You do not have permission to reject documents';
@@ -135,26 +143,7 @@ class DocumentController extends Controller
         return redirect()->route('home');
     }
 
-    public function BuildSendMail($doc , $action){
 
-        switch ($doc->status){
-            case Document::UNDER_REVISION:
-                Mail::to(User::query()->whereHas('roles', function ($query) {
-                    $query->where('role_slug', 'reviewer');
-                })->first()->email)->send(new DocumentAction($action, route('search', ['query' => $doc->filename])));
-                break;
-            case Document::UNDER_FINALIZATION:
-                Mail::to(User::query()->whereHas('roles', function ($query) {
-                    $query->where('role_slug', 'finalizer');
-                })->first()->email)->send(new DocumentAction($action, route('search', ['query' => $doc->filename])));
-                break;
-
-            case Document::APPROVED || Document::REJECTED:
-                Mail::to(User::query()->whereHas('roles', function ($query) {
-                    $query->where('role_slug', 'uploader');
-                })->first()->email)->send(new DocumentAction($action, route('search', ['query' => $doc->filename])));
-        }
-    }
     public function search()
     {
         $search = request('query');

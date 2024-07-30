@@ -41,7 +41,7 @@ This is a simple document management system built with Laravel. It allows for th
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your/repository.git`
+1. Clone the repository: `git clone https://github.com/YousefHSS/DocManagmentSystem.git`
 2. Install dependencies: `composer install`
 3. Copy `.env.example` to `.env` and configure your environment variables.
 4. Generate application key: `php artisan key:generate`

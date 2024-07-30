@@ -33,7 +33,7 @@ it('can update a document', function () {
 //    create a document
 $doc = Document::factory()->create();
 //    update the document
-$response = $this->patch(route('update', $doc->id), ['file' => UploadedFile::fake()->create('document.pdf', 100)]);
+$response = $this->patch(route('edit', $doc->id), ['file' => UploadedFile::fake()->create('document.pdf', 100)]);
 $response->assertRedirect('home');
 });
 it('can delete a document', function () {

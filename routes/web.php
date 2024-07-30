@@ -54,7 +54,7 @@ Route::group(['prefix' => 'document/'], function () {
 //download
     Route::post('download/{document}', [DocumentController::class, 'download'])->name('download');
 //update
-    Route::patch('update/{document}', [DocumentController::class, 'update'])->name('update');
+    Route::patch('update/{document}', [DocumentController::class, 'update'])->name('edit');
 //delete
     Route::post('delete', [DocumentController::class, 'delete'])->name('delete');
 //create

@@ -1,3 +1,27 @@
+@php
+    if (!function_exists('GetStatusColor')){
+        function GetStatusColor($status){
+            switch ($status) {
+                case 'Under_Revision':
+                    echo 'background-color: #ffcccb;';
+                    break;
+                case 'Under_Finalization':
+                    echo 'background-color: #c0c916;';
+                    break;
+                case 'Approved':
+                    echo 'background-color: #90ee90;';
+                    break;
+                case 'Rejected':
+                    echo 'background-color: #ff0000;';
+                    break;
+                default:
+                    echo 'background-color: #ffcccb;';
+            }
+        }
+    }
+
+@endphp
+
 @extends('layouts.app')
 @extends('layouts.Toast')
 @extends('components.reason-popup')
@@ -172,23 +196,3 @@
 
 
 @endsection
-<?php
-    function GetStatusColor($status){
-        switch ($status) {
-            case 'Under_Revision':
-                echo 'background-color: #ffcccb;';
-                break;
-            case 'Under_Finalization':
-                echo 'background-color: #ffcccb;';
-                break;
-            case 'Approved':
-                echo 'background-color: #90ee90;';
-                break;
-            case 'Rejected':
-                echo 'background-color: #ffcccb;';
-                break;
-            default:
-                echo 'background-color: #ffcccb;';
-        }
-    }
-
